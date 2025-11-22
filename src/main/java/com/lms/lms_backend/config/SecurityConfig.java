@@ -42,7 +42,7 @@ public class SecurityConfig {
                 config.setAllowedOrigins(List.of(
                     "http://localhost:5173",
                     "http://127.0.0.1:5173",
-                    "https://lms-frontend-lilac-nine.vercel.app" // <-- VERCEL URL
+                    "https://lms-bhadrak.vercel.app/" // <-- VERCEL URL
                 ));
                 config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 config.setAllowedHeaders(List.of("*"));
