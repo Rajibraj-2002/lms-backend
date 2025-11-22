@@ -17,4 +17,4 @@ EXPOSE 8080
 # -Xmx350m: Limits max memory to 350MB (leaving room for OS)
 # -Xss512k: Reduces thread stack size to save memory
 # -XX:+UseSerialGC: Uses a simpler garbage collector that uses less CPU/RAM
-ENTRYPOINT ["java", "-Xmx350m", "-Xss512k", "-XX:+UseSerialGC", "-jar", "-Dserver.port=${PORT}", "-Djava.security.egd=file:/dev/./urandom", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dserver.port=${PORT}", "-Djava.security.egd=file:/dev/./urandom", "app.jar"]
