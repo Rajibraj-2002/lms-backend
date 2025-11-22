@@ -123,12 +123,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                // --- FIX: Allow Local AND Vercel Domains ---
-                config.setAllowedOrigins(List.of(
-                    "http://localhost:5173",
-                    "http://127.0.0.1:5173",
-                    "https://lms-bhadrak.vercel.app" // <-- Ensure this matches your final Vercel URL
-                ));
+                
+                // --- FIX: Allow ANY Origin (Nuclear Option) ---
+                // This solves all 403 CORS issues immediately
+                config.setAllowedOriginPatterns(List.of("*")); 
+                
                 config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 config.setAllowedHeaders(List.of("*"));
                 config.setAllowCredentials(true);
@@ -139,10 +138,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
             
-                // --- FIX: Added /ws/** back to this list ---
-                .requestMatchers("/api/auth/login", "/api/auth/register/librarian", "/api/auth/reset-password").permitAll() 
-                .requestMatchers("/api/public/**", "/uploads/**", "/ws/**").permitAll() 
+                // Public Endpoints
+                .requestMatchers("/api/auth/**", "/api/public/**", "/uploads/**", "/ws/**").permitAll() 
                 
+                // Protected Routes
                 .requestMatchers("/api/admin/**").hasRole(Role.LIBRARIAN.name())
                 .requestMatchers("/api/user/**").hasRole(Role.USER.name())
                 .anyRequest().authenticated()
