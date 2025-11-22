@@ -15,4 +15,4 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose the port
 EXPOSE 8080
 # Command to start the app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dserver.port=${PORT}", "-Djava.security.egd=file:/dev/./urandom", "app.jar"]
