@@ -166,4 +166,13 @@ public class AuthService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No librarian account found."));
     }
+    @CacheEvict(value = {"admin_stats", "user_details"}, allEntries = true)
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found");
+        }
+        // Note: If the user has active books/fines, the database might block this 
+        // depending on your foreign key settings. This is a safety feature.
+        userRepository.deleteById(id);
+    }
 }

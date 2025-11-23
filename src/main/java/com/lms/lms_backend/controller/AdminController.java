@@ -6,18 +6,19 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping; //deleted mapping added
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable; 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,8 +30,8 @@ import com.lms.lms_backend.model.dto.BookReturnRequest;
 import com.lms.lms_backend.model.dto.ChangePasswordRequest;
 import com.lms.lms_backend.model.dto.DashboardStatsDTO;
 import com.lms.lms_backend.model.dto.FineResponse;
-import com.lms.lms_backend.model.dto.ManualFineRequest; // Import ManualFineRequest
-import com.lms.lms_backend.model.dto.UserCreationRequest;
+import com.lms.lms_backend.model.dto.ManualFineRequest;
+import com.lms.lms_backend.model.dto.UserCreationRequest; // Import ManualFineRequest
 import com.lms.lms_backend.model.entity.Notification;
 import com.lms.lms_backend.model.entity.User;
 import com.lms.lms_backend.repository.NotificationRepository;
@@ -203,6 +204,16 @@ public class AdminController {
             return ResponseEntity.ok("Password changed successfully.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/users/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            authService.deleteUser(id);
+            return ResponseEntity.ok("User deleted successfully.");
+        } catch (Exception e) {
+            // This catches issues like "User has active loans"
+        return ResponseEntity.badRequest().body("Could not delete user. They may have active loans or fines.");
         }
     }
 }
