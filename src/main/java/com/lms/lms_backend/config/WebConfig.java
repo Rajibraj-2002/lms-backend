@@ -16,8 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
         // Ensure the path ends with a slash
         String path = uploadDir.endsWith("/") ? uploadDir : uploadDir + "/";
         
-        // Map the URL "/uploads/**" to the physical file location "file:/tmp/"
+        // Use file:/// for absolute paths on Linux/Unix systems like Render
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + path);
+                .addResourceLocations("file:///" + path);
     }
 }
